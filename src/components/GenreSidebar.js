@@ -1,19 +1,21 @@
-import { Stack, Typography, Box, Button } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 
-const genres = [
-	'Global Hits',
-	'Pop',
-	'Hip-Hop/Rap',
-	'Dance',
-	'Electronic',
-	'R&B/Soul',
-	'Rock',
-	'Romance',
-	'Sports',
-	'Classical',
-];
+import { useGetGlobalGenresQuery } from '../redux/services/shazamApi';
+import GenreItem from './GenreItem';
 
 const GenreSidebar = () => {
+	const { data, isFetching, error } = useGetGlobalGenresQuery();
+	const genresList = data?.global?.genres;
+	// console.log(genresList);
+
+	if (error) {
+		return <Typography>Error loading genres</Typography>;
+	}
+
+	if (isFetching) {
+		return <Typography>Loading genres only for you</Typography>;
+	}
+
 	return (
 		<Stack
 			direction='row'
@@ -23,17 +25,8 @@ const GenreSidebar = () => {
 				flexDirection: 'column',
 			}}
 		>
-			{genres.map((genre) => (
-				<Box sx={{ borderBottom: '1px black solid' }} key={genre}>
-					<Button
-						variant='text'
-						sx={{
-							'&.MuiButton-text': { color: 'black' },
-						}}
-					>
-						<Typography variant='body1'>{genre}</Typography>
-					</Button>
-				</Box>
+			{genresList.map((genre) => (
+				<GenreItem key={genre?.id} genre={genre} />
 			))}
 		</Stack>
 	);
