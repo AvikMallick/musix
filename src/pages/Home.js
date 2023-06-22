@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import GenreSidebar from '../components/GenreSidebar';
 import RelatedSongSidebar from '../components/RelatedSongSidebar';
 import SongsList from '../components/SongsList';
-import { fetchFromAPI } from '../utils/fetchFromApi';
 
 const HomePage = () => {
 	return (
@@ -29,8 +28,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-export async function loader() {
-	const data = await fetchFromAPI('charts/track');
-	return data.tracks;
-}

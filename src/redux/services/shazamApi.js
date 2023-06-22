@@ -14,6 +14,7 @@ export const shazamApi = createApi({
 	}),
 	endpoints: (builder) => ({
 		getTopGlobalCharts: builder.query({ query: () => 'charts/track' }),
+
 		getGenreSongs: builder.query({
 			query: (id) => {
 				return {
@@ -22,6 +23,7 @@ export const shazamApi = createApi({
 				};
 			},
 		}),
+
 		getRecommendedSongs: builder.query({
 			query: (listId) => {
 				return {
@@ -30,7 +32,18 @@ export const shazamApi = createApi({
 				};
 			},
 		}),
+
 		getGlobalGenres: builder.query({ query: () => 'charts/list' }),
+
+		getSearchResult: builder.query({
+			query: (term) => {
+				console.log('searching');
+				return {
+					url: 'search',
+					params: term,
+				};
+			},
+		}),
 	}),
 });
 
@@ -39,4 +52,5 @@ export const {
 	useGetGenreSongsQuery,
 	useGetRecommendedSongsQuery,
 	useGetGlobalGenresQuery,
+	useGetSearchResultQuery,
 } = shazamApi;

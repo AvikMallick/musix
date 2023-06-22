@@ -6,7 +6,6 @@ import GenreItem from './GenreItem';
 const GenreSidebar = () => {
 	const { data, isFetching, error } = useGetGlobalGenresQuery();
 	const genresList = data?.global?.genres;
-	// console.log(genresList);
 
 	if (error) {
 		return <Typography>Error loading genres</Typography>;

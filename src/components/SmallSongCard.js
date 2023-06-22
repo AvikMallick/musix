@@ -19,7 +19,6 @@ const TinyText = styled(Typography)({
 });
 
 const SmallSongCard = ({ track }) => {
-	// console.log(track?.attributes?.streaming?.preview);
 	const { title, songImage, songUrl } = track;
 
 	const { activeSong, isPlaying } = useSelector((state) => state.player);

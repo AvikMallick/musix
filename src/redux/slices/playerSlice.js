@@ -13,6 +13,7 @@ const initialState = {
 		songUrl: '',
 		songImage: '',
 	},
+	searchResult: { undefined },
 };
 
 const playerSlice = createSlice({
@@ -31,38 +32,13 @@ const playerSlice = createSlice({
 			state.currentSongs = action.payload;
 		},
 
-		// 	nextSong: (state, action) => {
-		// 		if (state.currentSongs[action.payload]?.track) {
-		// 			state.activeSong = state.currentSongs[action.payload]?.track;
-		// 		} else {
-		// 			state.activeSong = state.currentSongs[action.payload];
-		// 		}
-		// 		state.currentIndex = action.payload;
-		// 		state.isActive = true;
-		// 	},
-		// 	prevSong: (state, action) => {
-		// 		if (state.currentSongs[action.payload]?.track) {
-		// 			state.activeSong = state.currentSongs[action.payload]?.track;
-		// 		} else {
-		// 			state.activeSong = state.currentSongs[action.payload];
-		// 		}
-		// 		state.currentIndex = action.payload;
-		// 		state.isActive = true;
-		// 	},
-		//
-		// 	selectGenreListId: (state, action) => {
-		// 		state.genreListId = action.payload;
-		// 	},
+		setSearchResult: (state, action) => {
+			state.searchResult = action.payload;
+		},
 	},
 });
 
-export const {
-	setActiveSong,
-	setIsPlaying,
-	setCurrentSongs,
-	// 	nextSong,
-	// 	prevSong,
-	// 	selectGenreListId,
-} = playerSlice.actions;
+export const { setActiveSong, setIsPlaying, setCurrentSongs, setSearchResult } =
+	playerSlice.actions;
 
 export default playerSlice.reducer;

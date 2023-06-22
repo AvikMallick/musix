@@ -26,19 +26,21 @@ const RelatedSongSidebar = () => {
 	return (
 		<Stack>
 			<Typography variant='h6'>Similar Songs</Typography>
-			{relatedShazamSongList?.map((track) => (
-				<SmallSongCard
-					key={track?.id}
-					track={{
-						key: track?.id || '',
-						id: track?.id || '',
-						title: track?.attributes?.title || '',
-						artist: track?.attributes?.primaryArtist || '',
-						songUrl: track?.attributes?.streaming?.preview || '',
-						songImage: track?.attributes?.images?.coverArt || '',
-					}}
-				/>
-			))}
+			{relatedShazamSongList
+				?.filter((track) => track?.attributes?.streaming?.preview)
+				?.map((track) => (
+					<SmallSongCard
+						key={track?.id}
+						track={{
+							key: track?.id || '',
+							id: track?.id || '',
+							title: track?.attributes?.title || '',
+							artist: track?.attributes?.primaryArtist || '',
+							songUrl: track?.attributes?.streaming?.preview || '',
+							songImage: track?.attributes?.images?.coverArt || '',
+						}}
+					/>
+				))}
 		</Stack>
 	);
 };
