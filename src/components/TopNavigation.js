@@ -13,21 +13,22 @@ const TopNavigation = () => {
 	const dispatch = useDispatch();
 
 	const [inputValue, setInputValue] = useState('');
+	const [finalInputValue, setFinalInputValue] = useState(''); // to use it rtk query so that with every change of inputValue a new query is not called
 	const [mount, setMount] = useState(true);
 
 	// technique to skip fetching on mounting the component -> conditional fetching using skip parameter
 	const { data, refetch } = useGetSearchResultQuery(
-		{ term: inputValue.trim() },
+		{ term: finalInputValue.trim() },
 		{ skip: mount }
 	);
 
 	const handleSearch = (e) => {
 		e.preventDefault();
 		// later add the functionality not to navigate if empty value
+		setFinalInputValue(inputValue);
 		if (mount) setMount(false);
 		else refetch();
 		navigate('discover');
-		console.log(inputValue);
 	};
 
 	useEffect(() => {
@@ -63,6 +64,9 @@ const TopNavigation = () => {
 				value={inputValue}
 				onChange={(e) => {
 					setInputValue(e.target.value);
+				}}
+				onKeyUp={(e) => {
+					if (e.key === 'Enter') handleSearch(e);
 				}}
 				InputProps={{
 					endAdornment: (
