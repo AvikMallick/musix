@@ -1,4 +1,5 @@
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, Box } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useSelector } from 'react-redux';
 
 import SmallSongCard from './SmallSongCard';
@@ -11,14 +12,6 @@ const RelatedSongSidebar = () => {
 		id: `track-similarities-id-${activeSong?.key}`,
 	});
 
-	if (error) {
-		return <div>Error in loading related Songs</div>;
-	}
-
-	if (isFetching) {
-		return <div>Finding Related Songs...</div>;
-	}
-
 	let relatedShazamSongList = data?.resources?.['shazam-songs']; // it is an obj of obj
 	if (relatedShazamSongList)
 		relatedShazamSongList = Object.values(relatedShazamSongList);
@@ -26,6 +19,15 @@ const RelatedSongSidebar = () => {
 	return (
 		<Stack>
 			<Typography variant='h6'>Similar Songs</Typography>
+			{error && <div>Error in loading new related Songs</div>}
+			{isFetching && (
+				<Box sx={{ display: 'flex' }} alignContent='center'>
+					<Typography sx={{ display: 'inline' }}>
+						Finding new related songs...
+						<CircularProgress size='1rem' color='inherit' />
+					</Typography>
+				</Box>
+			)}
 			{relatedShazamSongList
 				?.filter((track) => track?.attributes?.streaming?.preview)
 				?.map((track) => (

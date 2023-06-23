@@ -7,7 +7,7 @@ export const shazamApi = createApi({
 		prepareHeaders: (headers) => {
 			headers.set(
 				'X-RapidAPI-Key',
-				'3de61c5a14msh7aba582ef8e8f98p1c294ajsnc3b4ce18798b'
+				'5357eeba0fmsh24f7fd2aea35226p15ffcfjsn2a2ebccb844a'
 			);
 			return headers;
 		},
@@ -37,7 +37,6 @@ export const shazamApi = createApi({
 
 		getSearchResult: builder.query({
 			query: (term) => {
-				console.log('searching');
 				return {
 					url: 'search',
 					params: term,
