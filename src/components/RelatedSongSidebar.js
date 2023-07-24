@@ -23,7 +23,7 @@ const RelatedSongSidebar = () => {
 			{isFetching && (
 				<Box sx={{ display: 'flex' }} alignContent='center'>
 					<Typography sx={{ display: 'inline' }}>
-						Finding new related songs...
+						Finding new related songs &nbsp;
 						<CircularProgress size='1rem' color='inherit' />
 					</Typography>
 				</Box>

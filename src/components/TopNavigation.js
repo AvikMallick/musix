@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useDispatch } from 'react-redux';
 
 import { useGetSearchResultQuery } from '../redux/services/shazamApi';
-import { setSearchResult } from '../redux/slices/playerSlice';
+import { setSearchResult, setSearching } from '../redux/slices/playerSlice';
 
 const TopNavigation = () => {
 	const navigate = useNavigate();
@@ -17,14 +17,14 @@ const TopNavigation = () => {
 	const [mount, setMount] = useState(true);
 
 	// technique to skip fetching on mounting the component -> conditional fetching using skip parameter
-	const { data, refetch } = useGetSearchResultQuery(
+	const { data, refetch, isFetching } = useGetSearchResultQuery(
 		{ term: finalInputValue.trim() },
 		{ skip: mount }
 	);
 
 	const handleSearch = (e) => {
 		e.preventDefault();
-		// later add the functionality not to navigate if empty value
+		if (inputValue.length === 0) return; // not to navigate if empty value
 		setFinalInputValue(inputValue);
 		if (mount) setMount(false);
 		else refetch();
@@ -32,8 +32,14 @@ const TopNavigation = () => {
 	};
 
 	useEffect(() => {
-		if (data) dispatch(setSearchResult(data));
+		if (data) {
+			dispatch(setSearchResult(data));
+		}
 	}, [data, dispatch]);
+
+	useEffect(() => {
+		dispatch(setSearching(isFetching));
+	}, [isFetching]);
 
 	return (
 		<Box

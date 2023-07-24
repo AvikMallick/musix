@@ -79,7 +79,7 @@ const SongsListItem = ({ track, index }) => {
 						alt='cover'
 					/>
 					<Typography sx={{ flex: '1', color: !songUrl ? 'gray' : '' }}>
-						{title.split('(')[0].split('-')[0]}
+						{`${title?.substring(0, 20)}${title.length > 20 ? '..' : ''}`}
 					</Typography>
 					<Divider orientation='vertical' flexItem />
 				</Box>

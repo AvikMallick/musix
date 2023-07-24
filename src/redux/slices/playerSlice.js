@@ -14,6 +14,7 @@ const initialState = {
 		songImage: '',
 	},
 	searchResult: { undefined },
+	isSearching: false,
 };
 
 const playerSlice = createSlice({
@@ -35,10 +36,19 @@ const playerSlice = createSlice({
 		setSearchResult: (state, action) => {
 			state.searchResult = action.payload;
 		},
+
+		setSearching: (state, action) => {
+			state.isSearching = action.payload;
+		},
 	},
 });
 
-export const { setActiveSong, setIsPlaying, setCurrentSongs, setSearchResult } =
-	playerSlice.actions;
+export const {
+	setActiveSong,
+	setIsPlaying,
+	setCurrentSongs,
+	setSearchResult,
+	setSearching,
+} = playerSlice.actions;
 
 export default playerSlice.reducer;

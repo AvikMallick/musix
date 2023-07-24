@@ -3,8 +3,8 @@ import { Box, Typography, Container, Slider, IconButton } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import PauseRounded from '@mui/icons-material/PauseRounded';
 import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
-import SkipNextRoundedIcon from '@mui/icons-material/SkipNextRounded';
-import SkipPreviousRoundedIcon from '@mui/icons-material/SkipPreviousRounded';
+import FastForwardRoundedIcon from '@mui/icons-material/FastForwardRounded';
+import FastRewindRoundedIcon from '@mui/icons-material/FastRewindRounded';
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -42,6 +42,7 @@ const MusicPlayerSlider = () => {
 	const activeSong = useSelector((state) => state.player.activeSong);
 	const isPlaying = useSelector((state) => state.player.isPlaying);
 
+	const [volume, setVolume] = useState(1);
 	const [position, setPosition] = useState(0);
 	const [paused, setPaused] = useState(true);
 	const [duration, setDuration] = useState(0);
@@ -56,7 +57,7 @@ const MusicPlayerSlider = () => {
 		setTimeProgress(currTime);
 
 		playAnimationRef.current = requestAnimationFrame(repeat);
-	}, []);
+	}, [setTimeProgress, audioRef]);
 
 	function formatDuration(value) {
 		const minute = Math.floor(value / 60);
@@ -68,6 +69,26 @@ const MusicPlayerSlider = () => {
 		const seconds = Math.floor(audioRef.current.duration);
 		setDuration(seconds);
 	};
+
+	const onPlayingEnded = () => {
+		setPaused(true);
+		dispatch(setIsPlaying(false));
+	};
+
+	useEffect(() => {
+		console.log(
+			'audioRef.current.currTime:',
+			audioRef?.current?.currTime,
+			'position:',
+			position,
+			'timeProgress:',
+			timeProgress
+		);
+	}, [audioRef?.current?.currTime, position, timeProgress]);
+
+	useEffect(() => {
+		audioRef.current.volume = volume; // volume ranges from 0 to 1
+	}, [volume]);
 
 	useEffect(() => {
 		audioRef.current.currentTime = position;
@@ -122,6 +143,7 @@ const MusicPlayerSlider = () => {
 							ref={audioRef}
 							src={activeSong?.songUrl || ''}
 							onLoadedMetadata={onLoadedMetadata}
+							onEnded={onPlayingEnded}
 							style={{ display: 'none' }}
 						/>
 
@@ -132,8 +154,10 @@ const MusicPlayerSlider = () => {
 							}}
 							justifyContent='flex-end'
 						>
-							<Typography variant='h6'>
-								{activeSong?.title?.split('(')[0].split('-')[0] || ''}
+							<Typography variant='h6' sx={{ align: 'left' }}>
+								{`${activeSong?.title?.substring(0, 12)}${
+									activeSong?.title.length > 20 ? '..' : ''
+								}`}
 							</Typography>
 							<Typography
 								variant='body2'
@@ -155,8 +179,14 @@ const MusicPlayerSlider = () => {
 							marginTop={-2}
 						>
 							<Box>
-								<IconButton size='small' aria-label='previous song'>
-									<SkipPreviousRoundedIcon
+								<IconButton
+									size='small'
+									aria-label='backward 10 seconds'
+									onClick={() => {
+										setPosition(1);
+									}}
+								>
+									<FastRewindRoundedIcon
 										fontSize='large'
 										htmlColor={mainIconColor}
 									/>
@@ -183,8 +213,12 @@ const MusicPlayerSlider = () => {
 								</IconButton>
 							</Box>
 							<Box>
-								<IconButton size='small' aria-label='next song'>
-									<SkipNextRoundedIcon
+								<IconButton
+									size='small'
+									aria-label='forward 10 seconds'
+									onClick={() => {}}
+								>
+									<FastForwardRoundedIcon
 										fontSize='large'
 										htmlColor={mainIconColor}
 									/>
@@ -206,7 +240,6 @@ const MusicPlayerSlider = () => {
 						<Slider
 							ref={timeSliderEl}
 							aria-label='time-indicator'
-							// defaultValue={10}
 							size='small'
 							value={timeProgress}
 							min={0}
@@ -215,7 +248,7 @@ const MusicPlayerSlider = () => {
 							sx={{
 								color:
 									theme.palette.mode === 'dark' ? '#fff' : 'rgba(0,0,0,0.87)',
-								// height: 4,
+								height: 3,
 								padding: 0,
 								'& .MuiSlider-thumb': {
 									width: 8,
@@ -246,28 +279,39 @@ const MusicPlayerSlider = () => {
 						<VolumeUpRoundedIcon htmlColor={mainIconColor} />
 						<Slider
 							aria-label='Volume'
-							defaultValue={100}
+							min={0}
+							max={1}
+							defaultValue={1}
+							step={0.01}
+							onChange={(_, value) => setVolume(value)}
 							size='small'
 							sx={{
+								mt: '11px',
+								height: 3,
 								color:
 									theme.palette.mode === 'dark' ? '#fff' : 'rgba(0,0,0,0.87)',
-								'& .MuiSlider-track': {
-									border: 'none',
-								},
+								padding: 0,
 								'& .MuiSlider-thumb': {
-									width: 12,
-									height: 12,
-									backgroundColor: '#fff',
+									width: 8,
+									height: 8,
+									transition: '0.3s cubic-bezier(.47,1.64,.41,.8)',
 									'&:before': {
-										boxShadow: '0 4px 8px rgba(0,0,0,0.4)',
+										boxShadow: '0 2px 12px 0 rgba(0,0,0,0.4)',
 									},
-									'&:hover, &.Mui-focusVisible, &.Mui-active': {
-										boxShadow: 'none',
+									'&:hover, &.Mui-focusVisible': {
+										boxShadow: `0px 0px 0px 8px ${
+											theme.palette.mode === 'dark'
+												? 'rgb(255 255 255 / 16%)'
+												: 'rgb(0 0 0 / 16%)'
+										}`,
+									},
+									'&.Mui-active': {
+										width: 12,
+										height: 12,
 									},
 								},
 								'& .MuiSlider-rail': {
 									opacity: 0.28,
-									width: '65%',
 								},
 							}}
 						/>
