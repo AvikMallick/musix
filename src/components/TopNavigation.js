@@ -58,7 +58,7 @@ const TopNavigation = () => {
 			<Box width='150px'>
 				<Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
 					<Typography variant='h4' component='h1'>
-						MUSI<Box sx={{ display: 'inline', color: 'red' }}>X</Box>
+						MUSI<Box sx={{ display: 'inline', color: 'red' }}>XX</Box>
 					</Typography>
 				</Link>
 			</Box>
