@@ -39,7 +39,7 @@ const TopNavigation = () => {
 
 	useEffect(() => {
 		dispatch(setSearching(isFetching));
-	}, [isFetching]);
+	}, [dispatch, isFetching]);
 
 	return (
 		<Box

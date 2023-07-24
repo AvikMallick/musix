@@ -43,7 +43,6 @@ const MusicPlayerSlider = () => {
 	const isPlaying = useSelector((state) => state.player.isPlaying);
 
 	const [volume, setVolume] = useState(1);
-	const [position, setPosition] = useState(0);
 	const [paused, setPaused] = useState(true);
 	const [duration, setDuration] = useState(0);
 	const [timeProgress, setTimeProgress] = useState(0);
@@ -76,23 +75,8 @@ const MusicPlayerSlider = () => {
 	};
 
 	useEffect(() => {
-		console.log(
-			'audioRef.current.currTime:',
-			audioRef?.current?.currTime,
-			'position:',
-			position,
-			'timeProgress:',
-			timeProgress
-		);
-	}, [audioRef?.current?.currTime, position, timeProgress]);
-
-	useEffect(() => {
 		audioRef.current.volume = volume; // volume ranges from 0 to 1
 	}, [volume]);
-
-	useEffect(() => {
-		audioRef.current.currentTime = position;
-	}, [position]);
 
 	useEffect(() => {
 		if (firstTime < 2) {
@@ -116,6 +100,17 @@ const MusicPlayerSlider = () => {
 		}
 		playAnimationRef.current = requestAnimationFrame(repeat);
 	}, [paused, audioRef, repeat]);
+
+	// useEffect(() => {
+	// 	console.log(
+	// 		'audioRef.current.currentTime:',
+	// 		audioRef?.current?.currentTime,
+	// 		'position:',
+	// 		position,
+	// 		'timeProgress:',
+	// 		timeProgress
+	// 	);
+	// }, [audioRef?.current?.currentTime, position, timeProgress]);
 
 	return (
 		<Box
@@ -183,7 +178,10 @@ const MusicPlayerSlider = () => {
 									size='small'
 									aria-label='backward 10 seconds'
 									onClick={() => {
-										setPosition(1);
+										audioRef.current.currentTime = Math.max(
+											0,
+											timeProgress - 10
+										);
 									}}
 								>
 									<FastRewindRoundedIcon
@@ -216,7 +214,12 @@ const MusicPlayerSlider = () => {
 								<IconButton
 									size='small'
 									aria-label='forward 10 seconds'
-									onClick={() => {}}
+									onClick={() => {
+										audioRef.current.currentTime = Math.min(
+											duration,
+											timeProgress + 10
+										);
+									}}
 								>
 									<FastForwardRoundedIcon
 										fontSize='large'
@@ -244,7 +247,8 @@ const MusicPlayerSlider = () => {
 							value={timeProgress}
 							min={0}
 							max={duration}
-							onChange={(_, value) => setPosition(value)}
+							// onChange={(_, value) => setPosition(value)}
+							onChange={(_, value) => (audioRef.current.currentTime = value)}
 							sx={{
 								color:
 									theme.palette.mode === 'dark' ? '#fff' : 'rgba(0,0,0,0.87)',
